@@ -7,7 +7,7 @@ class Board:
     whites = []
     blacks = []
 
-    def __init__(self, game_mode, ai=False, depth=2, log=False):  # game_mode == 0 : whites down/blacks up
+    def __init__(self, game_mode, ai=False, depth=2, log=False):  # game_mode == 0 : белые снизу / чёрные сверху
         self.board = []
         self.game_mode = game_mode
         self.depth = depth
@@ -41,8 +41,8 @@ class Board:
         self[Wking_xPos][Wking_yPos] = self.whiteKing
         self[Bking_xPos][Bking_yPos] = self.blackKing
         self[Wpawn1_xPos][Wpawn1_yPos] = Pawn('white', Wpawn1_xPos, Wpawn1_yPos, '\u265F')
-        self[Wpawn2_xPos][Wpawn2_yPos] = Pawn('white', Wpawn2_xPos, Wpawn2_yPos, '\u2659')
-        self[Brook_xPos][Brook_yPos] = Rook('black', Brook_xPos, Brook_yPos, '\u2656')
+        self[Wpawn2_xPos][Wpawn2_yPos] = Pawn('white', Wpawn2_xPos, Wpawn2_yPos, '\u265F')
+        self[Brook_xPos][Brook_yPos] = Rook('black', Brook_xPos, Brook_yPos, '\u265C')
 
         self.save_pieces()
 
@@ -58,7 +58,7 @@ class Board:
                     else:
                         self.blacks.append(self[i][j])
 
-    def make_move(self, piece, x, y, keep_history=False):  # history is logged when ai searches for moves
+    def make_move(self, piece, x, y, keep_history=False):  # история отслеживается при поиске компьютером ходов
         old_x = piece.x
         old_y = piece.y
         if keep_history:
@@ -175,48 +175,27 @@ class Board:
         return False
 
     def insufficient_material(self):
-        total_white_knights = 0
-        total_black_knights = 0
-        total_white_bishops = 0
-        total_black_bishops = 0
-        total_other_white_pieces = 0
-        total_other_black_pieces = 0
+        total_white_pieces = 0
+        total_black_pieces = 0
 
         for piece in self.whites:
-            if piece.type == 'Knight':
-                total_white_knights += 1
-            elif piece.type == 'Bishop':
-                total_white_bishops += 1
-            elif piece.type != 'King':
-                total_other_white_pieces += 1
+            if piece.type != 'King':
+                total_white_pieces += 1
 
         for piece in self.blacks:
-            if piece.type == 'Knight':
-                total_black_knights += 1
-            elif piece.type == 'Bishop':
-                total_black_bishops += 1
-            elif piece.type != 'King':
-                total_other_black_pieces += 1
-
-        weak_white_pieces = total_white_bishops + total_white_knights
-        weak_black_pieces = total_black_bishops + total_black_knights
+            if piece.type != 'King':
+                total_black_pieces += 1
 
         if self.whiteKing and self.blackKing:
-            if weak_white_pieces + total_other_white_pieces + weak_black_pieces + total_other_black_pieces == 0:
+            if total_white_pieces + total_black_pieces == 0:
                 return True
-            if weak_white_pieces + total_other_white_pieces == 0:
-                if weak_black_pieces == 1:
+            if total_white_pieces == 0:
+                if total_black_pieces == 1:
                     return True
-            if weak_black_pieces + total_other_black_pieces == 0:
-                if weak_white_pieces == 1:
+            if total_black_pieces == 0:
+                if total_white_pieces == 1:
                     return True
-            if len(self.whites) == 1 and len(self.blacks) == 16 or len(self.blacks) == 1 and len(self.whites) == 16:
-                return True
-            if total_white_knights == weak_white_pieces + total_other_white_pieces and len(self.blacks) == 1:
-                return True
-            if total_black_knights == weak_black_pieces + total_other_black_pieces and len(self.whites) == 1:
-                return True
-            if weak_white_pieces == weak_black_pieces == 1 and total_other_white_pieces == total_other_black_pieces == 0:
+            if len(self.whites) == 1 and len(self.blacks) == 2 or len(self.blacks) == 1 and len(self.whites) >= 2:
                 return True
 
     def evaluate(self):

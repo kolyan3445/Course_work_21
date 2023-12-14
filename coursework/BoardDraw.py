@@ -3,10 +3,11 @@ from tkinter import messagebox
 from ChessPiece import *
 from Computer import get_random_move, get_ai_move
 
-dark_block = pygame.image.load('assets/squares/square brown_d.png')
-light_block = pygame.image.load('assets/squares/square gray_l.png')
-dark_block = pygame.transform.scale(dark_block, (75, 75))
-light_block = pygame.transform.scale(light_block, (75, 75))
+dark_block = pygame.Surface((75, 75))
+light_block = pygame.Surface((75, 75))
+
+light_block.fill((255, 255, 255))
+dark_block.fill((100, 100, 100))
 
 whitePawn = pygame.image.load('assets/pieces/white_pawn.png')
 whitePawn = pygame.transform.scale(whitePawn, (75, 75))
@@ -119,8 +120,8 @@ def start(board):
                         visible_moves = True
                         screen.blit(highlight_block, (move[0], move[1]))
                         pygame.display.update()
-                    if isinstance(piece, Pawn) and board.game_mode == 0 and Pawn.y == 0:
-                        board[x][y] = Rook(Pawn.color, Pawn.x, Pawn.y)
+                    if isinstance(piece, Pawn) and piece.y == 0 or piece.y == 7:
+                        piece = Rook(piece.color, piece.x, piece.y, '\u2656')
                 else:
                     clicked_move = (x, y)
                     try:

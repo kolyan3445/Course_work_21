@@ -69,7 +69,9 @@ def login():
 def game():
     keep_playing = True
     print(color_var.get())
-    board = Board(game_mode=color_var.get(), ai=True, depth=1, log=True)  # game_mode == 0: whites down / 1: blacks down
+    board = Board(game_mode=color_var.get(), ai=True, depth=1, log=True)  # game_mode == 0: белые снизу / 1: чёрные снизу
+
+    welcome_window.destroy()
 
     while keep_playing:
         BoardDraw.initialize()
@@ -77,13 +79,11 @@ def game():
         BoardDraw.draw_background(board)
         keep_playing = BoardDraw.start(board)
 
-    welcome_window.destroy()
-
 
 def login_success(login):
 
     global color_var
-    color_var = IntVar()
+    color_var = 0
 
     font = "Calibri 16"
 

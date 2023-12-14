@@ -4,7 +4,7 @@ from itertools import product
 
 class ChessPiece:
 
-    # history is used to keep data, so board.unmake_move() works properly.
+    # история нужна для правильной работы board.unmake_move().
     eaten_pieces_history = []
     has_moved_history = []
     position_history = []
@@ -19,11 +19,15 @@ class ChessPiece:
 
     def filter_moves(self, moves, board):
         final_moves = moves[:]
+
         for move in moves:
             board.make_move(self, move[0], move[1], keep_history=True)
+
             if board.king_is_threatened(self.color, move):
                 final_moves.remove(move)
+
             board.unmake_move(self)
+
         return final_moves
 
     def get_moves(self, board):
@@ -40,6 +44,7 @@ class ChessPiece:
             self.position_history.append(self.x)
             self.position_history.append(self.y)
             self.has_moved_history.append(self.moved)
+
         self.x = x
         self.y = y
         self.moved = True
@@ -60,26 +65,34 @@ class ChessPiece:
 
 class Pawn(ChessPiece):
 
-    
-
     def get_moves(self, board):
         moves = []
+
         if board.game_mode == 0 and self.color == 'white' or board.game_mode == 1 and self.color == 'black':
             direction = 1
         else:
             direction = -1
+
         x = self.x + direction
+
         if board.has_empty_block(x, self.y):
             moves.append((x, self.y))
             if self.moved is False and board.has_empty_block(x + direction, self.y):
                 moves.append((x + direction, self.y))
+
         if board.is_valid_move(x, self.y - 1):
             if board.has_opponent(self, x, self.y - 1):
                 moves.append((x, self.y - 1))
+
         if board.is_valid_move(self.x + direction, self.y + 1):
             if board.has_opponent(self, x, self.y + 1):
                 moves.append((x, self.y + 1))
+
         return moves
+
+    def promote(self, board):
+        if board.game_mode == 0 and self.y == 0:
+            self.type = Rook(self.color, self.x, self.y, '\u2656')
 
     def get_score(self):
         return 10
