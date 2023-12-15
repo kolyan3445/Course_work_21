@@ -189,13 +189,7 @@ class Board:
         if self.whiteKing and self.blackKing:
             if total_white_pieces + total_black_pieces == 0:
                 return True
-            if total_white_pieces == 0:
-                if total_black_pieces == 1:
-                    return True
-            if total_black_pieces == 0:
-                if total_white_pieces == 1:
-                    return True
-            if len(self.whites) == 1 and len(self.blacks) == 2 or len(self.blacks) == 1 and len(self.whites) >= 2:
+            if len(self.whites) == 1 and len(self.blacks) == 1:
                 return True
 
     def evaluate(self):
