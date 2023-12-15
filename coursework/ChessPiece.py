@@ -90,10 +90,6 @@ class Pawn(ChessPiece):
 
         return moves
 
-    def promote(self, board):
-        if board.game_mode == 0 and self.y == 0:
-            self.type = Rook(self.color, self.x, self.y, '\u2656')
-
     def get_score(self):
         return 10
 
