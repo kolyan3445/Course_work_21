@@ -68,7 +68,7 @@ def login():
 
 def game():
     keep_playing = True
-    print(color_var.get())
+    
     board = Board(game_mode=color_var.get(), ai=True, depth=1, log=True)  # game_mode == 0: белые снизу / 1: чёрные снизу
 
     welcome_window.destroy()
@@ -82,9 +82,6 @@ def game():
 
 def login_success(login):
 
-    global color_var
-    color_var = 0
-
     font = "Calibri 16"
 
     global welcome_window
@@ -92,6 +89,9 @@ def login_success(login):
     welcome_window.geometry("500x500")
     welcome_window.title("Добро пожаловать!")
     welcome_window.resizable(False, False)
+
+    global color_var
+    color_var = IntVar(master=welcome_window, value=0)
 
     welcome_label = Label(welcome_window, text=f"Добро пожаловать, {login} !", font=font)
     welcome_label.pack()
