@@ -120,8 +120,6 @@ def start(board):
                         visible_moves = True
                         screen.blit(highlight_block, (move[0], move[1]))
                         pygame.display.update()
-                    if isinstance(piece, Pawn) and piece.y == 0 or piece.y == 7:
-                        piece = Rook(piece.color, piece.x, piece.y, '\u2656')
                 else:
                     clicked_move = (x, y)
                     try:
